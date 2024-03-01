@@ -1,17 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1/marketData"; 
+const API_URL = "http://localhost:8080/marketData"; 
 
 export const getAllMarketDatas = createAsyncThunk(
-  "marketData/getAll",
+  "marketDatas/getAll",
   async () => {
       return (await axios.get(`${API_URL}/all`)).data;
   }
 );
 
 export const getMarketDataForOneCrypto = createAsyncThunk(
-  "marketData/getOnecrypto",
+  "marketDatas/getOnecrypto",
   async (id) => {
       return (await axios.get(`${API_URL}/${id}`)).data;
   }
@@ -53,6 +53,6 @@ const marketDataSlice = createSlice({
   
 });
 
-export const { setSelectedCrypto } = cryptoSlice.actions;
+export const { setSelectedData } = marketDataSlice.actions;
 
-export default cryptoSlice.reducer;
+export default marketDataSlice.reducer;

@@ -4,6 +4,7 @@ import com.example.market_api.entity.Crypto;
 import com.example.market_api.entity.MarketData;
 import com.example.market_api.repository.MarketDataRepository;
 import com.example.market_api.service.CryptoService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -45,12 +46,12 @@ public class MarketDataAPIController {
 
     }
 
-    @GetMapping("/marketData/{cryptoId}")
-    public Flux<MarketData> getMarketData(@PathVariable String cryptoId) {
-        return marketDataRepository.findAllById(cryptoId);
-    }
+//    @GetMapping(value = "/{cryptoId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public Flux<MarketData> getMarketData(@PathVariable String cryptoId) {
+//        return marketDataRepository.findAllByCryptoId(cryptoId);
+//    }
 
-    @GetMapping("/all")
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<MarketData> getAll() {
         return marketDataRepository.findAll();
     }

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 public interface MarketDataRepository extends ReactiveMongoRepository<MarketData, Integer> {
 
-    Flux<MarketData> findAllById(String id);
+    Flux<MarketData> findAllByCryptoId(String id);
 
     Mono<MarketData> findFirstByCryptoIdAndTradingTimeGreaterThanEqualOrderByTradingTimeAsc(String cryptoId, LocalDate dateTime);
 
