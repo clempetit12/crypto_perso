@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="market_api" />
+        <module name="composition_user_wallet" />
+        <module name="user_api" />
+        <module name="composition_wallet_market" />
+        <module name="wallet_api" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="composition_user_wallet" options="-parameters" />
+      <module name="composition_wallet_market" options="-parameters" />
+      <module name="market_api" options="-parameters" />
+      <module name="user_api" options="-parameters" />
+      <module name="wallet_api" options="-parameters" />
+    </option>
+  </component>
+</project>

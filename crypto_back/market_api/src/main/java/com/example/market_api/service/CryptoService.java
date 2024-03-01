@@ -88,6 +88,62 @@ public class CryptoService {
     }
 
 
+    public Mono<Double> calculatePerformanceForDateForOneCrypto(String date, String cryptoId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dateConverted = LocalDate.parse(date, formatter);
+
+        Mono<MarketData> nearestPriceMono = marketDataRepository.findFirstByCryptoIdAndTradingTimeGreaterThanEqualOrderByTradingTimeAsc(cryptoId, dateConverted)
+                .onErrorResume(error -> {
+                    System.err.println("Error fetching nearest price for crypto " + cryptoId + ": " + error.getMessage());
+                    return Mono.empty();
+                })
+                .flatMap(marketData -> {
+                    double cryptoValue = marketData.getCryptoValue();
+                    System.out.println("Crypto performance: " + cryptoValue);
+                    return Mono.just(marketData);
+                });
+
+        Mono<MarketData> latestPriceMono = marketDataRepository.findFirstByCryptoIdAndTradingTimeGreaterThanEqualOrderByTradingTimeAsc(cryptoId, dateConverted.minusDays(1))
+                .onErrorResume(error -> {
+                    System.err.println("Error fetching latest price for crypto " + cryptoId + ": " + error.getMessage());
+                    return Mono.empty();
+                })
+                .flatMap(marketData -> {
+                    double cryptoValue = marketData.getCryptoValue();
+                    return Mono.just(marketData);
+                });
+
+        Mono<Double> performanceMono = nearestPriceMono.zipWith(latestPriceMono)
+                .map(tuple -> {
+                    double nearestPrice = tuple.getT1().getCryptoValue();
+                    double latestPrice = tuple.getT2().getCryptoValue();
+                    double performance = ((latestPrice - nearestPrice) / nearestPrice) * 100.0;
+                    return Math.round(performance * 100.0) / 100.0; // Arrondi à 2 décimales
+                })
+                .onErrorResume(error -> {
+                    System.err.println("Error calculating performance: " + error.getMessage());
+                    return Mono.empty();
+                });
+
+        return performanceMono;
+
+
+
+
+    }
+
+    public Mono<Double> getPriceByDateAndByCryptoId(String date, String cryptoId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dateConverted = LocalDate.parse(date, formatter);
+        Mono<Double> priceSearched = marketDataRepository.findFirstByCryptoIdAndTradingTimeGreaterThanEqualOrderByTradingTimeAsc( cryptoId, dateConverted)
+                .map(marketData -> marketData.getCryptoValue())
+                .onErrorResume(error -> {
+                    System.err.println("Error fetching nearest price for crypto " + cryptoId + ": " + error.getMessage());
+                    return Mono.empty();
+                });
+        System.out.println("price searched " + priceSearched);
+return priceSearched;
+    }
 }
 
 

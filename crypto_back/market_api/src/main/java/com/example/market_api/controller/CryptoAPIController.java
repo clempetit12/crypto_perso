@@ -54,6 +54,11 @@ public class CryptoAPIController {
                 });
     }
 
+    @GetMapping(value = "/performance/{date}/{cryptoId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<Double> calculatePerformancePerCrypto(@PathVariable("date") String date, @PathVariable("cryptoId") String cryptoId) {
+        return cryptoService.calculatePerformanceForDateForOneCrypto(date,cryptoId);
+    }
+
 
 
     @GetMapping("/{id}")
@@ -61,8 +66,8 @@ public class CryptoAPIController {
         return cryptoRepository.findById(id);
     }
 
-    @GetMapping(value = "/price/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<Crypto> getPrice(@PathVariable String date) {
-        return cryptoService.getPriceByDate(date);
+    @GetMapping(value = "/price/{date}/{cryptoId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<Double> getCryptoValue(@PathVariable("date") String date, @PathVariable("cryptoId") String cryptoId) {
+        return cryptoService.getPriceByDateAndByCryptoId(date, cryptoId);
     }
 }
